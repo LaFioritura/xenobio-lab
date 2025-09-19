@@ -41,27 +41,46 @@ function getAdvancedEvolution(metamorphLevel) {
   return `${form} — Stage: ${stageName}`;
 }
 
-// === BIOFORM VISUAL FX ===
-function drawBioform(seed) {
+// === BIOFORM VISUAL FX MUTANTE ===
+function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
   const ctx = document.getElementById("specimenFx")?.getContext("2d");
   if (!ctx || !seed) return;
-  const hash = seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const radius = 30 + (hash % 20);
+  const hash = seed.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const baseRadius = 40 + mutations * 2 - entropy / 10;
+  const pulse = Math.sin(Date.now() / 500) * (cognition / 10);
+  const opacity = containment / 100;
+
   ctx.clearRect(0, 0, 200, 200);
   ctx.beginPath();
-  for (let i = 0; i < 360; i += 10) {
+  for (let i = 0; i < 360; i += 5) {
     const angle = i * Math.PI / 180;
-    const r = radius + Math.sin(hash * angle) * 10;
+    const r = baseRadius + Math.sin(hash * angle * 0.01) * (5 + metamorph) + pulse;
     const x = 100 + r * Math.cos(angle);
     const y = 100 + r * Math.sin(angle);
     ctx.lineTo(x, y);
   }
   ctx.closePath();
-  ctx.fillStyle = `rgba(${hash % 255}, 100, 200, 0.6)`;
+  ctx.fillStyle = `rgba(${entropy * 2}, ${100 + mutations * 10}, ${255 - metamorph * 10}, ${opacity})`;
   ctx.fill();
 }
 
-// Funzione di salvataggio automatico
+// === ANIMAZIONE CONTINUA ===
+let animationTick = 0;
+function animateCreature() {
+  animationTick += 0.05;
+  drawMutant(
+    bioform.species,
+    bioform.entropy + Math.sin(animationTick) * 5,
+    bioform.mutations,
+    bioform.metamorph,
+    bioform.cognition,
+    bioform.containment
+  );
+  requestAnimationFrame(animateCreature);
+}
+animateCreature();
+
+// === AUTOSAVE ===
 function autoSave(bioform) {
   const snapshot = {
     time: Date.now(),
@@ -125,13 +144,13 @@ function loadExperimentState() {
   } else {
     logEvent("OK", "Laboratory initialized — Species: Gelatinous [E4EMDC]");
     assignRandomCases();
-    drawBioform("E4EMDC");
   }
 }
 
 window.addEventListener("load", loadExperimentState);
 setInterval(saveExperimentState, 5000);
 
+// === VITALS + EVOLUZIONE VISIVA ===
 function updateVitals() {
   bioform.entropy += Math.floor(Math.random() * 3) - 1;
   bioform.coherence += Math.floor(Math.random() * 2) - 1;
@@ -147,9 +166,17 @@ function updateVitals() {
   if (advancedState) {
     logEvent("EVOLVE", `Advanced Evolution: ${advancedState}`);
   }
+
+  drawMutant(
+    bioform.species,
+    bioform.entropy,
+    bioform.mutations,
+    bioform.metamorph,
+    bioform.cognition,
+    bioform.containment
+  );
 }
 
 setInterval(updateVitals, 60000);
 updateVitals();
 
-// (Il resto del file rimane invariato)
