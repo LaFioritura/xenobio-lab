@@ -125,6 +125,26 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   overflow: hidden;
   text-shadow: 0 0 4px #0f0;
 }
+.glass-text {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  right: 16px;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  color: #0f0;
+  font-size: clamp(0.7em, 2vw, 0.85em);
+  background: transparent;
+  padding: 4px 8px;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-shadow: 0 0 4px #0f0;
+}
+.chamber.card {
+  position: relative;
+}
 
 
 
