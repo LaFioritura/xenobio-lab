@@ -183,5 +183,53 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   max-width: 100%;
   font-size: clamp(0.7em, 2vw, 0.85em);
 }
+.glass-text .msg {
+  position: absolute;
+  opacity: 0;
+  animation: cycle 180s linear infinite;
+  border-right: 2px solid #0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.glass-text .msg-1  { animation-delay: 0s; }
+.glass-text .msg-2  { animation-delay: 6s; }
+.glass-text .msg-3  { animation-delay: 12s; }
+.glass-text .msg-4  { animation-delay: 18s; }
+.glass-text .msg-5  { animation-delay: 24s; }
+.glass-text .msg-6  { animation-delay: 30s; }
+.glass-text .msg-7  { animation-delay: 36s; }
+.glass-text .msg-8  { animation-delay: 42s; }
+.glass-text .msg-9  { animation-delay: 48s; }
+.glass-text .msg-10 { animation-delay: 54s; }
+.glass-text .msg-11 { animation-delay: 60s; }
+.glass-text .msg-12 { animation-delay: 66s; }
+.glass-text .msg-13 { animation-delay: 72s; }
+.glass-text .msg-14 { animation-delay: 78s; }
+.glass-text .msg-15 { animation-delay: 84s; }
+.glass-text .msg-16 { animation-delay: 90s; }
+.glass-text .msg-17 { animation-delay: 96s; }
+.glass-text .msg-18 { animation-delay: 102s; }
+.glass-text .msg-19 { animation-delay: 108s; }
+.glass-text .msg-20 { animation-delay: 114s; }
+.glass-text .msg-21 { animation-delay: 120s; }
+.glass-text .msg-22 { animation-delay: 126s; }
+.glass-text .msg-23 { animation-delay: 132s; }
+.glass-text .msg-24 { animation-delay: 138s; }
+.glass-text .msg-25 { animation-delay: 144s; }
+.glass-text .msg-26 { animation-delay: 150s; }
+.glass-text .msg-27 { animation-delay: 156s; }
+.glass-text .msg-28 { animation-delay: 162s; }
+.glass-text .msg-29 { animation-delay: 168s; }
+.glass-text .msg-30 { animation-delay: 174s; }
+
+@keyframes cycle {
+  0%   { opacity: 0; width: 0 }
+  5%   { opacity: 1; width: 100% }
+  30%  { opacity: 1; width: 100% }
+  35%  { opacity: 0; width: 0 }
+  100% { opacity: 0; width: 0 }
+}
 
 
