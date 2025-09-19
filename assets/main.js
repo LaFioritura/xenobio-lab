@@ -38,19 +38,8 @@ if (saved) {
   Object.assign(bioform, restored);
   console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
 }
-function updateUptime() {
-  const startTime = localStorage.getItem("startTime") || Date.now();
-  localStorage.setItem("startTime", startTime);
-  const now = Date.now();
-  const diff = now - startTime;
-  const hours = Math.floor(diff / 3600000);
-  const minutes = Math.floor((diff % 3600000) / 60000);
-  document.getElementById("uptime").textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
-}
 
-setInterval(updateUptime, 60000);
-updateUptime();
-// Salva stato
+// Salva stato esperimento
 function saveExperimentState() {
   const state = {
     containment: currentContainment,
@@ -60,12 +49,12 @@ function saveExperimentState() {
     metamorph: currentMetamorph,
     cognition: currentCognition,
     rp: currentRP,
-    log: eventLog.slice(-50) // salva ultimi 50 eventi
+    log: eventLog.slice(-50)
   };
   localStorage.setItem("xenobioState", JSON.stringify(state));
 }
 
-// Carica stato
+// Carica stato esperimento
 function loadExperimentState() {
   const saved = localStorage.getItem("xenobioState");
   if (saved) {
@@ -84,11 +73,37 @@ function loadExperimentState() {
   }
 }
 
-// Al caricamento
 window.addEventListener("load", loadExperimentState);
-// Ad ogni azione
-setInterval(saveExperimentState, 5000); // salva ogni 5s
+setInterval(saveExperimentState, 5000);
 
+// Funzione vitals dinamici
+function updateVitals() {
+  bioform.entropy += Math.floor(Math.random() * 3) - 1;
+  bioform.coherence += Math.floor(Math.random() * 2) - 1;
+  bioform.containment += Math.floor(Math.random() * 2) - 1;
+
+  bioform.entropy = Math.max(0, Math.min(100, bioform.entropy));
+  bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
+  bioform.containment = Math.max(0, Math.min(100, bioform.containment));
+
+  logEvent("INFO", `Vitals updated — Entropy: ${bioform.entropy}, Coherence: ${bioform.coherence}, Containment: ${bioform.containment}`);
+}
+
+setInterval(updateVitals, 60000);
+updateVitals();
+
+// Quest narrativa
+const quests = [
+  {
+    id: "sigma_emergence",
+    objective: "Maintain containment ≥ 80% and accumulate 150 RP",
+    storyline: "Subject BF-7734 shows signs of emergent cognition. Sigma Protocol engaged.",
+    status: "active",
+    timer: 7200
+  }
+];
+
+// Fine esperimento
 function endExperiment() {
   let score = 0;
   if (bioform.containment >= 80) score += 30;
@@ -102,6 +117,8 @@ function endExperiment() {
 
   logEvent("FINAL", `Experiment ${verdict} · Score: ${score}/100`);
 }
+
+// Timer contenimento
 let containmentTimer = 180;
 setInterval(() => {
   if (bioform.containment >= 80) {
@@ -115,25 +132,15 @@ setInterval(() => {
   }
 }, 1000);
 
+// Sblocco achievement
+function unlockAchievement(name) {
   if (!achievements.includes(name)) {
     achievements.push(name);
     logEvent("OK", `Achievement unlocked: ${name}`);
   }
 }
 
-// Timer contenimento visivo
-let containmentTimer = 180;
-setInterval(() => {
-  if (currentContainment >= 80) {
-    containmentTimer--;
-    if (containmentTimer === 0) {
-      unlockAchievement("CONTAINMENT MASTER");
-      endExperiment();
-    }
-  } else {
-    containmentTimer = 180;
-  }
-}, 1000);
+// Report finale
 function generateFinalReport() {
   const timestamp = new Date().toISOString();
   let report = `=== XENOBIO LAB · EXPERIMENT REPORT ===\n`;
@@ -170,8 +177,11 @@ function generateFinalReport() {
     report += `${e.time} ${e.type} ${e.message}\n`;
   });
 
+  report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
   return report;
 }
+
+// Scarica report
 function downloadReport() {
   const report = generateFinalReport();
   const blob = new Blob([report], { type: "text/plain" });
@@ -182,15 +192,9 @@ function downloadReport() {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+// Evento finale
 logEvent("FINAL", "PERMADEATH triggered — experiment terminated");
 downloadReport();
-report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
-function updateUptime() {
-  const uptime = Math.floor(performance.now() / 60000); // minuti
-  const hours = Math.floor(uptime / 60);
-  const minutes = uptime % 60;
-  document.getElementById("uptime").textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
-}
 
-setInterval(updateUptime, 60000);
-updateUptime(); // chiamata iniziale
+
