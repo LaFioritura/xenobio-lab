@@ -145,6 +145,35 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .chamber.card {
   position: relative;
 }
+.terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75em;
+  color: #0f0;
+  padding: 8px 16px;
+  border-top: 1px solid #0f0;
+  background: rgba(0, 0, 0, 0.6);
+  text-shadow: 0 0 2px #0f0;
+}
+
+.footer-left span,
+.footer-right span {
+  margin-right: 12px;
+}
+.session-led {
+  color: #0f0;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  text-shadow: 0 0 4px #0f0;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
 
 
 
