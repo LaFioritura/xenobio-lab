@@ -41,6 +41,17 @@ function getAdvancedEvolution(metamorphLevel) {
   return `${form} — Stage: ${stageName}`;
 }
 
+// === CURSOR TRACKING ===
+let cursorX = 100;
+let cursorY = 100;
+
+document.addEventListener("mousemove", (e) => {
+  const rect = document.getElementById("specimenFx")?.getBoundingClientRect();
+  if (!rect) return;
+  cursorX = e.clientX - rect.left;
+  cursorY = e.clientY - rect.top;
+});
+
 // === BIOFORM VISUAL FX MUTANTE ===
 function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
   const ctx = document.getElementById("specimenFx")?.getContext("2d");
@@ -50,13 +61,21 @@ function drawMutant(seed, entropy, mutations, metamorph, cognition, containment)
   const pulse = Math.sin(Date.now() / 500) * (cognition / 10);
   const opacity = containment / 100;
 
+  let centerX = 100;
+  let centerY = 100;
+
+  if (cognition > 60) {
+    centerX += (cursorX - 100) * 0.1;
+    centerY += (cursorY - 100) * 0.1;
+  }
+
   ctx.clearRect(0, 0, 200, 200);
   ctx.beginPath();
   for (let i = 0; i < 360; i += 5) {
     const angle = i * Math.PI / 180;
     const r = baseRadius + Math.sin(hash * angle * 0.01) * (5 + metamorph) + pulse;
-    const x = 100 + r * Math.cos(angle);
-    const y = 100 + r * Math.sin(angle);
+    const x = centerX + r * Math.cos(angle);
+    const y = centerY + r * Math.sin(angle);
     ctx.lineTo(x, y);
   }
   ctx.closePath();
@@ -167,6 +186,10 @@ function updateVitals() {
     logEvent("EVOLVE", `Advanced Evolution: ${advancedState}`);
   }
 
+  if (bioform.cognition > 60) {
+    logEvent("PROTOCOL", "Neural Echo activated — Subject responds to cursor movement");
+  }
+
   drawMutant(
     bioform.species,
     bioform.entropy,
@@ -179,4 +202,3 @@ function updateVitals() {
 
 setInterval(updateVitals, 60000);
 updateVitals();
-
