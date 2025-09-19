@@ -230,6 +230,14 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   margin: 4px 0;
   font-size: 0.85em;
 }
+#specimenFx {
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+  border: 1px solid #444;
+  display: block;
+  margin: 12px auto;
+}
 
 
 
