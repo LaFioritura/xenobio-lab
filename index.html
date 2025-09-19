@@ -39,14 +39,7 @@
 
       <div class="specimen" id="specimen">
         <div class="bioform" id="bioform" role="button" aria-label="Interact with specimen">●</div>
-        <canvas id="specimenFx" class="fx"></canvas> 
-        
-   <div class="glass-text glass-lower" id="ambientMessage">
-  <span>🧬 Initializing ambient feed...</span>
-</div>
-     
-
-
+        <canvas id="specimenFx" class="fx"></canvas>
       </div>
 
       <div class="vitals">
@@ -376,52 +369,7 @@
 
   <div id="toasts" class="toasts"></div>
 
-<script src="assets/js/audio.js"></script>
-<script src="assets/js/app.js"></script>
-
-<script>
-const phrases = [
-  "🧬 Neural lattice echo detected · Signal phase: unknown",
-  "🧬 Glyph resonance unstable · Chamber integrity nominal",
-  "🧬 Recursive pulse emitted · No containment breach logged",
-  "🧬 Subject vocalized in extinct dialect · Translation failed",
-  "🧬 Quantum drift exceeds baseline · No action required",
-  "🧬 Bioform emits low-frequency hum · Source unidentified",
-  "🧬 Containment gel viscosity dropped · Threshold ignored",
-  "🧬 EM field distortion logged · No anomaly confirmed",
-  "🧬 Synthetic tissue regeneration exceeded expected rate",
-  "🧬 Chamber walls show signs of internal glyph formation",
-  "🧬 Subject appears dormant · Neural activity remains active",
-  "🧬 Unknown signal received · Source: internal",
-  "🧬 Temporal stasis field briefly collapsed · Auto-recovery OK",
-  "🧬 Subject emits recursive neural pulses · Loop incomplete",
-  "🧬 Containment sync unstable · No breach detected",
-  "🧬 Bioform integrity: 92% · No deviation logged",
-  "🧬 Neural echo detected · Signal repeats every 13s",
-  "🧬 Subject vocalizes · Audio pattern unrecognized",
-  "🧬 Glyphs detected · Translation protocol offline",
-  "🧬 EM fluctuations destabilize containment · No alert triggered",
-  "🧬 Bioform emits signal matching deep-space probe",
-  "🧬 Chamber temperature nominal · Surface distortion logged",
-  "🧬 Subject heartbeat irregular · No biological baseline",
-  "🧬 Containment field flickered · No breach confirmed",
-  "🧬 Neural link unstable · Feedback loop suppressed",
-  "🧬 Subject appears aware · No cognitive protocol active",
-  "🧬 Internal pressure spike · No rupture detected",
-  "🧬 Subject emits unknown pheromone · No response logged",
-  "🧬 Chamber walls resonate · Frequency: 7.3Hz",
-  "🧬 Bioform emits signal · Matches extinct probe signature"
-];
-
-function updateAmbientMessage() {
-  const msg = document.getElementById("ambientMessage");
-  const random = phrases[Math.floor(Math.random() * phrases.length)];
-  msg.innerHTML = `<span>${random}</span>`;
-}
-
-updateAmbientMessage(); // iniziale
-setInterval(updateAmbientMessage, 10000); // ogni 10s
-</script>
+  <script src="assets/js/audio.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
-
