@@ -212,6 +212,24 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   50% { opacity: 0.3; }
   100% { opacity: 1; }
 }
+.quest-panel {
+  font-family: 'JetBrains Mono', monospace;
+  color: #0f0;
+  background-color: #000;
+  border-top: 1px solid #0f0;
+  padding: 10px 20px;
+  margin-top: 20px;
+  text-shadow: 0 0 2px #0f0;
+  box-shadow: inset 0 1px 0 #0f0;
+}
+.quest-panel h3 {
+  margin-bottom: 6px;
+  font-size: 1em;
+}
+.quest-panel p {
+  margin: 4px 0;
+  font-size: 0.85em;
+}
 
 
 
