@@ -103,6 +103,16 @@ const quests = [
   }
 ];
 
+// Mostra la quest attiva nel log
+const activeQuest = quests.find(q => q.status === "active");
+if (activeQuest) {
+  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
+  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
+}
+
+
+];
+
 // Fine esperimento
 function endExperiment() {
   let score = 0;
