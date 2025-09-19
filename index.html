@@ -28,75 +28,13 @@
   </header>
 
   <main class="grid">
- <section class="chamber card" style="position: relative;">
-  <div class="card-head"> <style>
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink {
-  0%, 100% { border-color: transparent }
-  50% { border-color: #0f0 }
-}
-
-.ambient-events {
-  position: absolute;
-  bottom: 8px;
-  left: 12px;
-  right: 12px;
-  background: rgba(0, 255, 0, 0.05);
-  color: #0f0;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.85em;
-  padding: 6px 10px;
-  border-top: 1px solid rgba(0,255,0,0.2);
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.ambient-events span {
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid #0f0;
-  animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
-}
-</style>
-
-<div class="ambient-events">
-  <span id="eventText">🧬 Quantum lattice instability threshold exceeded</span>
-</div>
-
-    <div>
-      <div class="card-title">ISOLATION CHAMBER</div>
-      <div class="card-sub">Subject BF-7734 · Classification: VOLATILE</div>
-    </div>
-    <div class="chip threat" id="chipThreat">MINIMAL</div>
-  </div>
-
-  <!-- 🔮 Event overlay integrato nella chamber -->
-  <div class="ambient-events" style="
-    position: absolute;
-    bottom: 8px;
-    left: 12px;
-    right: 12px;
-    background: rgba(0, 255, 0, 0.05);
-    color: #0f0;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.85em;
-    padding: 6px 10px;
-    border-top: 1px solid rgba(0,255,0,0.2);
-    white-space: nowrap;
-    overflow-x: auto;
-  ">
-    🧬 Subject emits unidentified cognitive signals · Containment field flickers · Neural lattice restructuring in progress · Unknown glyphs appear on chamber walls · Synthetic tissue regeneration exceeded threshold
-  </div>
-</section>
-
-
-  </div>
-
+    <section class="chamber card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">ISOLATION CHAMBER</div>
+          <div class="card-sub">Subject BF-7734 · Classification: VOLATILE</div>
+        </div>
+        <div class="chip threat" id="chipThreat">MINIMAL</div>
       </div>
 
       <div class="specimen" id="specimen">
@@ -433,6 +371,5 @@
 
   <script src="assets/js/audio.js"></script>
   <script src="assets/js/app.js"></script>
-  <script src="assets/casualevents.js"></script>
 </body>
 </html>
