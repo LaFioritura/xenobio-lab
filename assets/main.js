@@ -172,3 +172,16 @@ function generateFinalReport() {
 
   return report;
 }
+function downloadReport() {
+  const report = generateFinalReport();
+  const blob = new Blob([report], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `xenobio_report_${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+logEvent("FINAL", "PERMADEATH triggered — experiment terminated");
+downloadReport();
+report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
