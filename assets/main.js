@@ -101,6 +101,20 @@ const quests = [
     status: "active",
     timer: 7200
   }
+  const activeQuest = quests.find(q => q.status === "active");
+if (activeQuest) {
+  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
+  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
+  renderQuestPanel(activeQuest); // 
+  const activeQuest = quests.find(q => q.status === "active");
+if (activeQuest) {
+  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
+  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
+  renderQuestPanel(activeQuest);
+}
+← aggiungi questa riga
+}
+
 ];
 
 // Mostra la quest attiva nel log
@@ -190,6 +204,18 @@ function generateFinalReport() {
   report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
   return report;
 }
+
+function renderQuestPanel(quest) {
+  const panel = document.querySelector(".quest-panel");
+  if (!panel || !quest) return;
+
+  panel.innerHTML = `
+    <h3>Active Quest</h3>
+    <p><strong>Objective:</strong> ${quest.objective}</p>
+    <p><strong>Storyline:</strong> ${quest.storyline}</p>
+  `;
+}
+
 
 // Scarica report
 function downloadReport() {
