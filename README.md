@@ -1,4 +1,4 @@
-# Xenobio Lab — Stable Build
+# Xenobio Lab — Stable Build BETA
 
 - Identical UI/UX
 - Research Agency funding: microgrant (cooldown override at 0 CR), publish findings, emergency stipend immediate at 0 CR
@@ -7,3 +7,4 @@
 - PWA offline cache, GDPR banner, audio, haptics, particles
 
 Hard refresh or clear site data if you had a previous cached version (service worker).
+ADDED PROCEDURAL INFINITE QUESTS 
