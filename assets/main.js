@@ -3,6 +3,64 @@
 
 import { bioform } from './state.js';
 
+// === RANDOM CASES ===
+const evolutionCases = [
+  { name: "Neurogenic Bloom", effect: "+30 Cognition, unlocks Neural Echo" },
+  { name: "Fractal Mutation", effect: "Symmetric mutations, unstable coherence" },
+  { name: "Quantum Bloom", effect: "+2 Metamorph, RP bonus" },
+  { name: "Empathic Resonance", effect: "Subject observes you, unlocks Echoform" },
+  { name: "Molecular Self-Assembly", effect: "New evolutionary branch unlocked" }
+];
+
+const containmentCases = [
+  { name: "Field Instability", effect: "Containment drops every 10s" },
+  { name: "Polarity Inversion", effect: "Primary protocols disabled" },
+  { name: "Symbiotic Contamination", effect: "Unpredictable mutations" },
+  { name: "Energy Surge", effect: "-200 Funds, +20 RP" },
+  { name: "Cognitive Escape", effect: "Subject attempts to breach containment" }
+];
+
+function assignRandomCases() {
+  const evo = evolutionCases[Math.floor(Math.random() * evolutionCases.length)];
+  const cont = containmentCases[Math.floor(Math.random() * containmentCases.length)];
+  logEvent("EVENT", `Evolution Case: ${evo.name} — ${evo.effect}`);
+  logEvent("EVENT", `Containment Case: ${cont.name} — ${cont.effect}`);
+}
+
+// === ADVANCED EVOLUTION ===
+const advancedForms = [
+  "Neuroform", "Fractal Entity", "Quantum Bloom", "Echoform", "Voidspawn"
+];
+
+function getAdvancedEvolution(metamorphLevel) {
+  if (metamorphLevel <= 15) return null;
+  const index = Math.floor((metamorphLevel - 16) / 3);
+  const stage = (metamorphLevel - 16) % 3;
+  const form = advancedForms[index % advancedForms.length];
+  const stageName = ["Emergence", "Expansion", "Ascension"][stage];
+  return `${form} — Stage: ${stageName}`;
+}
+
+// === BIOFORM VISUAL FX ===
+function drawBioform(seed) {
+  const ctx = document.getElementById("specimenFx")?.getContext("2d");
+  if (!ctx || !seed) return;
+  const hash = seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const radius = 30 + (hash % 20);
+  ctx.clearRect(0, 0, 200, 200);
+  ctx.beginPath();
+  for (let i = 0; i < 360; i += 10) {
+    const angle = i * Math.PI / 180;
+    const r = radius + Math.sin(hash * angle) * 10;
+    const x = 100 + r * Math.cos(angle);
+    const y = 100 + r * Math.sin(angle);
+    ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = `rgba(${hash % 255}, 100, 200, 0.6)`;
+  ctx.fill();
+}
+
 // Funzione di salvataggio automatico
 function autoSave(bioform) {
   const snapshot = {
@@ -24,14 +82,12 @@ function autoSave(bioform) {
   console.log("🧬 Autosave completed");
 }
 
-// Timer per salvataggio automatico ogni 60 secondi
 setInterval(() => {
   if (bioform && bioform.species) {
     autoSave(bioform);
   }
 }, 60000);
 
-// Caricamento automatico all’avvio
 const saved = localStorage.getItem("autosave");
 if (saved) {
   const restored = JSON.parse(saved);
@@ -39,7 +95,6 @@ if (saved) {
   console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
 }
 
-// Salva stato esperimento
 function saveExperimentState() {
   const state = {
     containment: currentContainment,
@@ -54,7 +109,6 @@ function saveExperimentState() {
   localStorage.setItem("xenobioState", JSON.stringify(state));
 }
 
-// Carica stato esperimento
 function loadExperimentState() {
   const saved = localStorage.getItem("xenobioState");
   if (saved) {
@@ -70,13 +124,14 @@ function loadExperimentState() {
     logEvent("OK", "Saved experiment restored — Species: Gelatinous [E4EMDC]");
   } else {
     logEvent("OK", "Laboratory initialized — Species: Gelatinous [E4EMDC]");
+    assignRandomCases();
+    drawBioform("E4EMDC");
   }
 }
 
 window.addEventListener("load", loadExperimentState);
 setInterval(saveExperimentState, 5000);
 
-// Funzione vitals dinamici
 function updateVitals() {
   bioform.entropy += Math.floor(Math.random() * 3) - 1;
   bioform.coherence += Math.floor(Math.random() * 2) - 1;
@@ -87,150 +142,14 @@ function updateVitals() {
   bioform.containment = Math.max(0, Math.min(100, bioform.containment));
 
   logEvent("INFO", `Vitals updated — Entropy: ${bioform.entropy}, Coherence: ${bioform.coherence}, Containment: ${bioform.containment}`);
+
+  const advancedState = getAdvancedEvolution(bioform.metamorph);
+  if (advancedState) {
+    logEvent("EVOLVE", `Advanced Evolution: ${advancedState}`);
+  }
 }
 
 setInterval(updateVitals, 60000);
 updateVitals();
 
-// Quest narrativa
-const quests = [
-  {
-    id: "sigma_emergence",
-    objective: "Maintain containment ≥ 80% and accumulate 150 RP",
-    storyline: "Subject BF-7734 shows signs of emergent cognition. Sigma Protocol engaged.",
-    status: "active",
-    timer: 7200
-  }
-  const activeQuest = quests.find(q => q.status === "active");
-if (activeQuest) {
-  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
-  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
-  renderQuestPanel(activeQuest); // 
-  const activeQuest = quests.find(q => q.status === "active");
-if (activeQuest) {
-  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
-  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
-  renderQuestPanel(activeQuest);
-}
-← aggiungi questa riga
-}
-
-];
-
-// Mostra la quest attiva nel log
-const activeQuest = quests.find(q => q.status === "active");
-if (activeQuest) {
-  logEvent("QUEST", `Objective: ${activeQuest.objective}`);
-  logEvent("LOG", `Storyline: ${activeQuest.storyline}`);
-}
-
-
-];
-
-// Fine esperimento
-function endExperiment() {
-  let score = 0;
-  if (bioform.containment >= 80) score += 30;
-  if (bioform.rp >= 150) score += 30;
-  if (bioform.mutations <= 2) score += 20;
-  if (bioform.entropy < 50) score += 20;
-
-  let verdict = "FAILED";
-  if (score >= 80) verdict = "SUCCESS";
-  else if (score >= 60) verdict = "PARTIAL SUCCESS";
-
-  logEvent("FINAL", `Experiment ${verdict} · Score: ${score}/100`);
-}
-
-// Timer contenimento
-let containmentTimer = 180;
-setInterval(() => {
-  if (bioform.containment >= 80) {
-    containmentTimer--;
-    if (containmentTimer === 0) {
-      unlockAchievement("CONTAINMENT MASTER");
-      endExperiment();
-    }
-  } else {
-    containmentTimer = 180;
-  }
-}, 1000);
-
-// Sblocco achievement
-function unlockAchievement(name) {
-  if (!achievements.includes(name)) {
-    achievements.push(name);
-    logEvent("OK", `Achievement unlocked: ${name}`);
-  }
-}
-
-// Report finale
-function generateFinalReport() {
-  const timestamp = new Date().toISOString();
-  let report = `=== XENOBIO LAB · EXPERIMENT REPORT ===\n`;
-  report += `Timestamp: ${timestamp}\n`;
-  report += `Subject: ${bioform.species} · Classification: ${bioform.classification}\n\n`;
-
-  report += `--- FINAL PARAMETERS ---\n`;
-  report += `Containment: ${bioform.containment}\n`;
-  report += `Coherence: ${bioform.coherence}\n`;
-  report += `Entropy: ${bioform.entropy}\n`;
-  report += `Mutations: ${bioform.mutations}\n`;
-  report += `Metamorph: ${bioform.metamorph}\n`;
-  report += `Cognition: ${bioform.cognition}\n`;
-  report += `RP: ${bioform.rp}\n\n`;
-
-  report += `--- ACHIEVEMENTS UNLOCKED ---\n`;
-  achievements.forEach(a => report += `✓ ${a}\n`);
-  report += `\n`;
-
-  report += `--- PROTOCOLS ACTIVATED ---\n`;
-  const protocolCount = {};
-  eventLog.forEach(e => {
-    if (e.type === "WARN" || e.type === "INFO") {
-      protocolCount[e.message] = (protocolCount[e.message] || 0) + 1;
-    }
-  });
-  Object.entries(protocolCount).forEach(([msg, count]) => {
-    report += `• ${msg} ×${count}\n`;
-  });
-  report += `\n`;
-
-  report += `--- EVENT LOG (last ${eventLog.length}) ---\n`;
-  eventLog.forEach(e => {
-    report += `${e.time} ${e.type} ${e.message}\n`;
-  });
-
-  report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
-  return report;
-}
-
-function renderQuestPanel(quest) {
-  const panel = document.querySelector(".quest-panel");
-  if (!panel || !quest) return;
-
-  panel.innerHTML = `
-    <h3>Active Quest</h3>
-    <p><strong>Objective:</strong> ${quest.objective}</p>
-    <p><strong>Storyline:</strong> ${quest.storyline}</p>
-  `;
-}
-
-
-// Scarica report
-function downloadReport() {
-  const report = generateFinalReport();
-  const blob = new Blob([report], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `xenobio_report_${Date.now()}.txt`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// Evento finale
-logEvent("FINAL", "PERMADEATH triggered — experiment terminated");
-downloadReport();
-
-
+// (Il resto del file rimane invariato)
