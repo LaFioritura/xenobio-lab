@@ -108,3 +108,38 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .kit-compact .grid{grid-template-columns:1fr}
 .kit-compact .vitals{grid-template-columns:repeat(2,1fr)}
 .kit-compact .grid2{grid-template-columns:1fr}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  0%, 100% { border-color: transparent }
+  50% { border-color: #0f0 }
+}
+
+.glass-text {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  font-family: 'Share Tech Mono', monospace;
+  color: #0f0;
+  font-size: 0.85em;
+  background: transparent;
+  padding: 4px 8px;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-shadow: 0 0 4px #0f0;
+}
+
+.glass-text span {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 2px solid #0f0;
+  white-space: nowrap;
+  animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
+}
+
