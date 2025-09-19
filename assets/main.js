@@ -185,3 +185,12 @@ function downloadReport() {
 logEvent("FINAL", "PERMADEATH triggered — experiment terminated");
 downloadReport();
 report += `\n--- VERIFIED BY XENOBIO COUNCIL · Sector E4EMDC · Archive Ref: #7734-Δ ---\n`;
+function updateUptime() {
+  const uptime = Math.floor(performance.now() / 60000); // minuti
+  const hours = Math.floor(uptime / 60);
+  const minutes = uptime % 60;
+  document.getElementById("uptime").textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
+}
+
+setInterval(updateUptime, 60000);
+updateUptime(); // chiamata iniziale
