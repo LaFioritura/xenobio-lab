@@ -38,3 +38,15 @@ if (saved) {
   Object.assign(bioform, restored);
   console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
 }
+function updateUptime() {
+  const startTime = localStorage.getItem("startTime") || Date.now();
+  localStorage.setItem("startTime", startTime);
+  const now = Date.now();
+  const diff = now - startTime;
+  const hours = Math.floor(diff / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  document.getElementById("uptime").textContent = `${hours}:${minutes.toString().padStart(2, '0')}`;
+}
+
+setInterval(updateUptime, 60000);
+updateUptime();
