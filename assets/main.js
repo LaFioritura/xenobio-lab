@@ -27,18 +27,17 @@ function assignRandomCases() {
   logEvent("EVENT", `Containment Case: ${cont.name} — ${cont.effect}`);
 }
 
-// === EVOLUTION FORMS ===
-const evolutionForms = [
-  "Dormant", "Reactive", "Coherent", "Adaptive", "Fractal",
-  "Quantum", "Neural", "Echo", "Symbiotic", "Void",
-  "Cascade", "Singularity", "Entity", "Ascendant", "Final"
-];
+// === FORME GEOMETRICHE CICLICHE ===
+const baseForms = ["rhombus", "rectangle", "circle", "orbital", "infinity"];
+const cycleColors = ["hsl(120, 70%, 50%)", "hsl(0, 100%, 50%)", "hsl(55, 100%, 50%)", "hsl(280, 100%, 60%)"];
 
-function getEvolutionForm(metamorphLevel) {
-  const index = metamorphLevel % 15;
-  const cycle = Math.floor(metamorphLevel / 15);
-  const color = cycle === 0 ? "hsl(120, 70%, 50%)" : cycle === 1 ? "hsl(0, 100%, 50%)" : "hsl(55, 100%, 50%)";
-  return { name: evolutionForms[index], color };
+function getVisualForm(metamorphLevel) {
+  const index = metamorphLevel % baseForms.length;
+  const cycle = Math.floor(metamorphLevel / baseForms.length);
+  const shape = baseForms[index];
+  const color = cycleColors[cycle % cycleColors.length];
+  const distortion = cycle * 0.1;
+  return { shape, color, distortion, cycle };
 }
 
 // === CURSOR TRACKING ===
@@ -54,7 +53,7 @@ document.addEventListener("mousemove", (e) => {
 
 // === BIOFORM VISUAL FX MUTANTE ===
 function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
-  if (metamorph < 45) return; // Aspetta la 45ª evoluzione
+  if (metamorph < 45) return;
 
   const canvas = document.getElementById("specimenFx");
   const ctx = canvas?.getContext("2d");
@@ -66,25 +65,20 @@ function drawMutant(seed, entropy, mutations, metamorph, cognition, containment)
   const centerY = height / 2;
 
   const hash = seed.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  const baseRadius = 40 + mutations * 2 - entropy / 10;
   const pulse = Math.sin(Date.now() / 500) * (cognition / 10);
   const opacity = containment / 100;
 
   let offsetX = centerX;
   let offsetY = centerY;
-
   if (cognition > 60) {
     offsetX += (cursorX - centerX) * 0.1;
     offsetY += (cursorY - centerY) * 0.1;
   }
 
-  const fluoColors = [
-    "rgba(255,255,0,0.6)", "rgba(255,0,0,0.6)", "rgba(0,255,255,0.6)",
-    "rgba(255,0,255,0.6)", "rgba(0,255,0,0.6)", "rgba(255,128,0,0.6)"
-  ];
-  const colorIndex = (metamorph - 45) % fluoColors.length;
-  ctx.fillStyle = fluoColors[colorIndex];
+  const { color, distortion } = getVisualForm(metamorph);
+  const baseRadius = 40 + mutations * 2 - entropy / 10 + distortion * 20;
 
+  ctx.fillStyle = color;
   ctx.clearRect(0, 0, width, height);
   ctx.beginPath();
   for (let i = 0; i < 360; i += 5) {
@@ -194,9 +188,14 @@ function updateVitals() {
   bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
   bioform.containment = Math.max(0, Math.min(100, bioform.containment));
 
-  const { name, color } = getEvolutionForm(bioform.metamorph);
+  const { shape, color, distortion, cycle } = getVisualForm(bioform.metamorph);
   const bioformElement = document.getElementById("bioform");
 
   bioformElement.style.opacity = bioform.metamorph < 45 ? "1" : "0";
   bioformElement.style.backgroundColor = color;
-  bioformElement.style.transform
+  bioformElement.style.transform = `scale(${1 + distortion}) rotate(${distortion * 30}deg)`;
+  bioformElement.style.borderRadius = shape === "circle" || shape === "orbital" ? "50%" : "0";
+  bioformElement.style.boxShadow = `0 0 ${10 + cycle * 5}px ${color}`;
+
+  logEvent("EVOLVE", `Form: ${shape} · Cycle ${cycle + 1}`);
+}
