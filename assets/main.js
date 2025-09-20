@@ -185,20 +185,11 @@ function updateVitals() {
   bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
   bioform.containment = Math.max(0, Math.min(100, bioform.containment));
 
-  // Rimuove il limite a metamorph
-  if (bioform.metamorph > 9999) bioform.metamorph = 0;
-
   const { shape, color, distortion, cycle } = getVisualForm(bioform.metamorph);
   const bioformElement = document.getElementById("bioform");
 
-  bioformElement.style.opacity = bioform.metamorph < 45 ? "1" : "0";
-  bioformElement.style.backgroundColor = color;
-  bioformElement.style.transform = `scale(${1 + distortion}) rotate(${distortion * 30}deg)`;
-  bioformElement.style.borderRadius = shape === "circle" || shape === "orbital" ? "50%" : "0";
-  bioformElement.style.boxShadow = `0 0 ${10 + cycle * 5}px ${color}`;
-
-  logEvent("EVOLVE", `Form: ${shape} · Cycle ${cycle + 1}`);
-}
-
-setInterval(updateVitals, 60000);
-updateVitals();
+  if (bioformElement) {
+    bioformElement.style.opacity = bioform.metamorph < 45 ? "1" : "0";
+    bioformElement.style.backgroundColor = color;
+    bioformElement.style.transform = `scale(${1 + distortion}) rotate(${distortion * 30}deg)`;
+    bioformElement.style.borderRadius = shape === "circle
