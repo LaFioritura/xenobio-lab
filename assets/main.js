@@ -1,6 +1,4 @@
 // main.js
-// Inizializzazione del gioco e salvataggio automatico
-
 import { bioform } from './state.js';
 
 // === RANDOM CASES ===
@@ -107,7 +105,6 @@ function animateCreature() {
   requestAnimationFrame(animateCreature);
 }
 animateCreature();
-
 // === AUTOSAVE ===
 function autoSave(bioform) {
   const snapshot = {
@@ -188,6 +185,9 @@ function updateVitals() {
   bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
   bioform.containment = Math.max(0, Math.min(100, bioform.containment));
 
+  // Rimuove il limite a metamorph
+  if (bioform.metamorph > 9999) bioform.metamorph = 0;
+
   const { shape, color, distortion, cycle } = getVisualForm(bioform.metamorph);
   const bioformElement = document.getElementById("bioform");
 
@@ -199,3 +199,6 @@ function updateVitals() {
 
   logEvent("EVOLVE", `Form: ${shape} · Cycle ${cycle + 1}`);
 }
+
+setInterval(updateVitals, 60000);
+updateVitals();
