@@ -131,8 +131,80 @@ if (saved) {
   const restored = JSON.parse(saved);
   Object.assign(bioform, restored);
   console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
+
+  // === TEST VISIVO TEMPORANEO ===
+  bioform.mutations = 5;
+  bioform.metamorph = 10;
+  bioform.cognition = 70;
+  bioform.entropy = 30;
 }
 
 function saveExperimentState() {
   const state = {
-    containment: currentContain
+    containment: currentContainment,
+    coherence: currentCoherence,
+    entropy: currentEntropy,
+    mutations: currentMutations,
+    metamorph: currentMetamorph,
+    cognition: currentCognition,
+    rp: currentRP,
+    log: eventLog.slice(-50)
+  };
+  localStorage.setItem("xenobioState", JSON.stringify(state));
+}
+
+function loadExperimentState() {
+  const saved = localStorage.getItem("xenobioState");
+  if (saved) {
+    const state = JSON.parse(saved);
+    currentContainment = state.containment;
+    currentCoherence = state.coherence;
+    currentEntropy = state.entropy;
+    currentMutations = state.mutations;
+    currentMetamorph = state.metamorph;
+    currentCognition = state.cognition;
+    currentRP = state.rp;
+    eventLog = state.log || [];
+    logEvent("OK", "Saved experiment restored — Species: Gelatinous [E4EMDC]");
+  } else {
+    logEvent("OK", "Laboratory initialized — Species: Gelatinous [E4EMDC]");
+    assignRandomCases();
+  }
+}
+
+window.addEventListener("load", loadExperimentState);
+setInterval(saveExperimentState, 5000);
+
+// === VITALS + EVOLUZIONE VISIVA ===
+function updateVitals() {
+  bioform.entropy += Math.floor(Math.random() * 3) - 1;
+  bioform.coherence += Math.floor(Math.random() * 2) - 1;
+  bioform.containment += Math.floor(Math.random() * 2) - 1;
+
+  bioform.entropy = Math.max(0, Math.min(100, bioform.entropy));
+  bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
+  bioform.containment = Math.max(0, Math.min(100, bioform.containment));
+
+  logEvent("INFO", `Vitals updated — Entropy: ${bioform.entropy}, Coherence: ${bioform.coherence}, Containment: ${bioform.containment}`);
+
+  const advancedState = getAdvancedEvolution(bioform.metamorph);
+  if (advancedState) {
+    logEvent("EVOLVE", `Advanced Evolution: ${advancedState}`);
+  }
+
+  if (bioform.cognition > 60) {
+    logEvent("PROTOCOL", "Neural Echo activated — Subject responds to cursor movement");
+  }
+
+  drawMutant(
+    bioform.species,
+    bioform.entropy,
+    bioform.mutations,
+    bioform.metamorph,
+    bioform.cognition,
+    bioform.containment
+  );
+}
+
+setInterval(updateVitals, 60000);
+updateVitals();
