@@ -27,18 +27,18 @@ function assignRandomCases() {
   logEvent("EVENT", `Containment Case: ${cont.name} — ${cont.effect}`);
 }
 
-// === ADVANCED EVOLUTION ===
-const advancedForms = [
-  "Neuroform", "Fractal Entity", "Quantum Bloom", "Echoform", "Voidspawn"
+// === EVOLUTION FORMS ===
+const evolutionForms = [
+  "Dormant", "Reactive", "Coherent", "Adaptive", "Fractal",
+  "Quantum", "Neural", "Echo", "Symbiotic", "Void",
+  "Cascade", "Singularity", "Entity", "Ascendant", "Final"
 ];
 
-function getAdvancedEvolution(metamorphLevel) {
-  if (metamorphLevel <= 15) return null;
-  const index = Math.floor((metamorphLevel - 16) / 3);
-  const stage = (metamorphLevel - 16) % 3;
-  const form = advancedForms[index % advancedForms.length];
-  const stageName = ["Emergence", "Expansion", "Ascension"][stage];
-  return `${form} — Stage: ${stageName}`;
+function getEvolutionForm(metamorphLevel) {
+  const index = metamorphLevel % 15;
+  const cycle = Math.floor(metamorphLevel / 15);
+  const color = cycle === 0 ? "hsl(120, 70%, 50%)" : cycle === 1 ? "hsl(0, 100%, 50%)" : "hsl(55, 100%, 50%)";
+  return { name: evolutionForms[index], color };
 }
 
 // === CURSOR TRACKING ===
@@ -54,6 +54,8 @@ document.addEventListener("mousemove", (e) => {
 
 // === BIOFORM VISUAL FX MUTANTE ===
 function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
+  if (metamorph < 45) return; // Aspetta la 45ª evoluzione
+
   const canvas = document.getElementById("specimenFx");
   const ctx = canvas?.getContext("2d");
   if (!ctx || !seed) return;
@@ -76,6 +78,13 @@ function drawMutant(seed, entropy, mutations, metamorph, cognition, containment)
     offsetY += (cursorY - centerY) * 0.1;
   }
 
+  const fluoColors = [
+    "rgba(255,255,0,0.6)", "rgba(255,0,0,0.6)", "rgba(0,255,255,0.6)",
+    "rgba(255,0,255,0.6)", "rgba(0,255,0,0.6)", "rgba(255,128,0,0.6)"
+  ];
+  const colorIndex = (metamorph - 45) % fluoColors.length;
+  ctx.fillStyle = fluoColors[colorIndex];
+
   ctx.clearRect(0, 0, width, height);
   ctx.beginPath();
   for (let i = 0; i < 360; i += 5) {
@@ -86,7 +95,6 @@ function drawMutant(seed, entropy, mutations, metamorph, cognition, containment)
     ctx.lineTo(x, y);
   }
   ctx.closePath();
-  ctx.fillStyle = `rgba(${entropy * 2}, ${100 + mutations * 10}, ${255 - metamorph * 10}, ${opacity})`;
   ctx.fill();
 }
 
@@ -138,12 +146,6 @@ if (saved) {
   const restored = JSON.parse(saved);
   Object.assign(bioform, restored);
   console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
-
-  // === TEST VISIVO TEMPORANEO ===
-  bioform.mutations = 5;
-  bioform.metamorph = 10;
-  bioform.cognition = 70;
-  bioform.entropy = 30;
 }
 
 function saveExperimentState() {
@@ -192,26 +194,9 @@ function updateVitals() {
   bioform.coherence = Math.max(0, Math.min(100, bioform.coherence));
   bioform.containment = Math.max(0, Math.min(100, bioform.containment));
 
-  logEvent("INFO", `Vitals updated — Entropy: ${bioform.entropy}, Coherence: ${bioform.coherence}, Containment: ${bioform.containment}`);
+  const { name, color } = getEvolutionForm(bioform.metamorph);
+  const bioformElement = document.getElementById("bioform");
 
-  const advancedState = getAdvancedEvolution(bioform.metamorph);
-  if (advancedState) {
-    logEvent("EVOLVE", `Advanced Evolution: ${advancedState}`);
-  }
-
-  if (bioform.cognition > 60) {
-    logEvent("PROTOCOL", "Neural Echo activated — Subject responds to cursor movement");
-  }
-
-  drawMutant(
-    bioform.species,
-    bioform.entropy,
-    bioform.mutations,
-    bioform.metamorph,
-    bioform.cognition,
-    bioform.containment
-  );
-}
-
-setInterval(updateVitals, 60000);
-updateVitals();
+  bioformElement.style.opacity = bioform.metamorph < 45 ? "1" : "0";
+  bioformElement.style.backgroundColor = color;
+  bioformElement.style.transform
