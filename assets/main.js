@@ -1,4 +1,3 @@
-// main.js
 import { bioform } from './state.js';
 
 // === RANDOM CASES ===
@@ -25,6 +24,52 @@ function assignRandomCases() {
   logEvent("EVENT", `Containment Case: ${cont.name} — ${cont.effect}`);
 }
 
+// === TRATTI PROCEDURALI ===
+function generateTrait(subject) {
+  const traitPool = ["Photosensitive", "Reactive Membrane", "Echo Cortex", "Fractal Skin", "Quantum Drift"];
+  const trait = traitPool[Math.floor(Math.random() * traitPool.length)];
+  const impact = {
+    cognition: Math.floor(Math.random() * 5),
+    entropy: Math.floor(Math.random() * 5),
+    containment: Math.floor(Math.random() * -3)
+  };
+  return { name: trait, impact };
+}
+
+function induceMutation(subject) {
+  const newTrait = generateTrait(subject);
+  subject.traits = subject.traits || [];
+  subject.traits.push(newTrait);
+  subject.entropy += newTrait.impact.entropy;
+  subject.cognition += newTrait.impact.cognition;
+  subject.containment += newTrait.impact.containment;
+
+  if (subject.entropy > 50) evolve(subject);
+}
+
+function evolve(subject) {
+  subject.form = `Form-${Math.floor(Math.random() * 10000)}`;
+  subject.mutations += 1;
+  subject.entropy = Math.floor(subject.entropy / 2);
+  subject.cognition += 10;
+  logEvent("EVOLVE", `Subject evolved into ${subject.form}`);
+}
+
+function regenerate(subject) {
+  const offspring = {
+    traits: [],
+    generation: (subject.generation || 0) + 1,
+    entropy: 10,
+    cognition: 5,
+    containment: 100,
+    mutations: 0,
+    species: subject.species + "_X",
+    form: "Initial"
+  };
+  logEvent("REGEN", `Generation ${offspring.generation} initialized`);
+  return offspring;
+}
+
 // === FORME GEOMETRICHE CICLICHE ===
 const baseForms = ["rhombus", "rectangle", "circle", "orbital", "infinity"];
 const cycleColors = ["hsl(120, 70%, 50%)", "hsl(0, 100%, 50%)", "hsl(55, 100%, 50%)", "hsl(280, 100%, 60%)"];
@@ -48,7 +93,6 @@ document.addEventListener("mousemove", (e) => {
   cursorX = e.clientX - rect.left;
   cursorY = e.clientY - rect.top;
 });
-
 // === BIOFORM VISUAL FX MUTANTE ===
 function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
   if (metamorph < 45) return;
@@ -94,6 +138,13 @@ function drawMutant(seed, entropy, mutations, metamorph, cognition, containment)
 let animationTick = 0;
 function animateCreature() {
   animationTick += 0.05;
+
+  // Evoluzione temporale
+  if (animationTick % 100 === 0) {
+    induceMutation(bioform);
+    updateBehavior(bioform, "cycle");
+  }
+
   drawMutant(
     bioform.species,
     bioform.entropy + Math.sin(animationTick) * 5,
@@ -102,78 +153,26 @@ function animateCreature() {
     bioform.cognition,
     bioform.containment
   );
+
+  // Rigenerazione automatica
+  if (bioform.entropy > 90 || bioform.containment < 10) {
+    bioform = regenerate(bioform);
+  }
+
   requestAnimationFrame(animateCreature);
 }
 animateCreature();
-// === AUTOSAVE ===
-function autoSave(bioform) {
-  const snapshot = {
-    time: Date.now(),
-    species: bioform.species,
-    containment: bioform.containment,
-    coherence: bioform.coherence,
-    cognition: bioform.cognition,
-    entropy: bioform.entropy,
-    mutations: bioform.mutations,
-    evolutionStage: bioform.evolutionStage,
-    neuralCore: bioform.neuralCore,
-    metabolicCluster: bioform.metabolicCluster,
-    structuralMatrix: bioform.structuralMatrix,
-    legacyTrace: bioform.legacyTrace,
-    asciiForm: bioform.asciiForm
-  };
-  localStorage.setItem("autosave", JSON.stringify(snapshot));
-  console.log("🧬 Autosave completed");
-}
 
-setInterval(() => {
-  if (bioform && bioform.species) {
-    autoSave(bioform);
-  }
-}, 60000);
+// === MEMORIA COMPORTAMENTALE ===
+function updateBehavior(subject, action) {
+  if (!subject.memory) subject.memory = {};
+  subject.memory[action] = (subject.memory[action] || 0) + 1;
 
-const saved = localStorage.getItem("autosave");
-if (saved) {
-  const restored = JSON.parse(saved);
-  Object.assign(bioform, restored);
-  console.log(`🧬 Autosave restored — Species: ${bioform.species}`);
-}
-
-function saveExperimentState() {
-  const state = {
-    containment: currentContainment,
-    coherence: currentCoherence,
-    entropy: currentEntropy,
-    mutations: currentMutations,
-    metamorph: currentMetamorph,
-    cognition: currentCognition,
-    rp: currentRP,
-    log: eventLog.slice(-50)
-  };
-  localStorage.setItem("xenobioState", JSON.stringify(state));
-}
-
-function loadExperimentState() {
-  const saved = localStorage.getItem("xenobioState");
-  if (saved) {
-    const state = JSON.parse(saved);
-    currentContainment = state.containment;
-    currentCoherence = state.coherence;
-    currentEntropy = state.entropy;
-    currentMutations = state.mutations;
-    currentMetamorph = state.metamorph;
-    currentCognition = state.cognition;
-    currentRP = state.rp;
-    eventLog = state.log || [];
-    logEvent("OK", "Saved experiment restored — Species: Gelatinous [E4EMDC]");
-  } else {
-    logEvent("OK", "Laboratory initialized — Species: Gelatinous [E4EMDC]");
-    assignRandomCases();
+  if (subject.memory[action] > 5) {
+    subject.entropy += 5;
+    logEvent("BEHAVIOR", `Subject resists repeated ${action}`);
   }
 }
-
-window.addEventListener("load", loadExperimentState);
-setInterval(saveExperimentState, 5000);
 
 // === VITALS + EVOLUZIONE VISIVA ===
 function updateVitals() {
@@ -192,4 +191,7 @@ function updateVitals() {
     bioformElement.style.opacity = bioform.metamorph < 45 ? "1" : "0";
     bioformElement.style.backgroundColor = color;
     bioformElement.style.transform = `scale(${1 + distortion}) rotate(${distortion * 30}deg)`;
-    bioformElement.style.borderRadius = shape === "circle
+    bioformElement.style.borderRadius = shape === "circle" ? "50%" : "0";
+  }
+}
+
