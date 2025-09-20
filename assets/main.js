@@ -54,28 +54,35 @@ document.addEventListener("mousemove", (e) => {
 
 // === BIOFORM VISUAL FX MUTANTE ===
 function drawMutant(seed, entropy, mutations, metamorph, cognition, containment) {
-  const ctx = document.getElementById("specimenFx")?.getContext("2d");
+  const canvas = document.getElementById("specimenFx");
+  const ctx = canvas?.getContext("2d");
   if (!ctx || !seed) return;
+
+  const width = canvas.width;
+  const height = canvas.height;
+  const centerX = width / 2;
+  const centerY = height / 2;
+
   const hash = seed.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const baseRadius = 40 + mutations * 2 - entropy / 10;
   const pulse = Math.sin(Date.now() / 500) * (cognition / 10);
   const opacity = containment / 100;
 
-  let centerX = 100;
-  let centerY = 100;
+  let offsetX = centerX;
+  let offsetY = centerY;
 
   if (cognition > 60) {
-    centerX += (cursorX - 100) * 0.1;
-    centerY += (cursorY - 100) * 0.1;
+    offsetX += (cursorX - centerX) * 0.1;
+    offsetY += (cursorY - centerY) * 0.1;
   }
 
-  ctx.clearRect(0, 0, 200, 200);
+  ctx.clearRect(0, 0, width, height);
   ctx.beginPath();
   for (let i = 0; i < 360; i += 5) {
     const angle = i * Math.PI / 180;
     const r = baseRadius + Math.sin(hash * angle * 0.01) * (5 + metamorph) + pulse;
-    const x = centerX + r * Math.cos(angle);
-    const y = centerY + r * Math.sin(angle);
+    const x = offsetX + r * Math.cos(angle);
+    const y = offsetY + r * Math.sin(angle);
     ctx.lineTo(x, y);
   }
   ctx.closePath();
